@@ -4,7 +4,7 @@ This guide will walk you through integrating UploadThingSwift into your Swift ap
 
 ## Step 1: Add to Your Project
 
-### Option A: Local Package (DevSpace Pro)
+### Option A: Local Package
 
 Since UploadThingSwift is a local package:
 
@@ -66,9 +66,9 @@ print("✅ Uploaded to: \(uploadedFiles[0].url)")
 // Output: https://utfs.io/f/abc123-def456.png
 ```
 
-## Step 4: DevSpace Pro Integration
+## Step 4: Integration
 
-If you're integrating into DevSpace Pro, store credentials in SwiftData:
+If you're integrating into your own app, store credentials in SwiftData:
 
 ```swift
 // 1. Define UploadThing config (already in MediaAPIKey.swift)
@@ -98,7 +98,7 @@ try modelContext.save()
 
 ### Auto-Strip Credentials
 
-DevSpace Pro automatically cleans pasted credentials:
+The package automatically handles credential formatting:
 
 ```swift
 // If you paste: UPLOADTHING_SECRET="sk_live_123..."
@@ -108,9 +108,9 @@ DevSpace Pro automatically cleans pasted credentials:
 // It automatically extracts: eyJhcGlL...
 ```
 
-## Step 5: MediaUploadService Integration (DevSpace Pro)
+## Step 5: MediaUploadService Integration
 
-The integration is already complete in DevSpace Pro! Here's how it works:
+Here's how to integrate the service in your app:
 
 ```swift
 import UploadThingSwift
@@ -207,7 +207,7 @@ private func uploadToUploadThing(
    - Cached and optimized
 ```
 
-## Step 6: UI Configuration (DevSpace Pro)
+## Step 6: UI Configuration
 
 The UI is already implemented in `MediaUploadIntegration.swift`! It includes:
 
@@ -258,12 +258,12 @@ do {
 
 ### Debug Logging
 
-DevSpace Pro includes extensive debug logging:
+The package includes extensive debug logging:
 
 ```
 [UploadThingSwift] 📤 REST API upload: test.png
 [UploadThingSwift] 🔑 x-uploadthing-api-key: sk_live_13ebd79...
-[UploadThingSwift] 🆔 x-uploadthing-app-id: DevSpace
+[UploadThingSwift] 🆔 x-uploadthing-app-id: your-app-id
 [UploadThingSwift] 📊 Status: 200
 [UploadThingSwift] ✅ API Response received
 [UploadThingSwift] 📤 Uploading to S3

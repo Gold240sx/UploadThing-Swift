@@ -3,7 +3,7 @@ import SwiftUI
 import UploadThingSwift
 
 /// Example: Working UploadThingSwift Integration
-/// This example shows the exact working implementation used in DevSpace Pro
+/// This example shows a complete working implementation
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 class UploadThingMediaService {
@@ -21,7 +21,7 @@ class UploadThingMediaService {
     // MARK: - Working Upload Method
     
     /// Upload a file using the working implementation
-    /// This matches the exact method used in DevSpace Pro's MediaUploadService
+    /// This matches the standard implementation pattern
     func uploadFile(at imageURL: URL, fileName: String) async throws -> UTUploadedFile {
         // Read file data
         let fileData = try Data(contentsOf: imageURL)
@@ -141,7 +141,7 @@ func exampleUsage() async throws {
 
 // MARK: - Complete Working Example
 
-/// This shows the exact working implementation from DevSpace Pro
+/// This shows the exact working implementation
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 func completeWorkingExample() async throws {
     // Initialize with your credentials
