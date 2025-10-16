@@ -253,12 +253,12 @@ public struct UploadDropzone: View {
                     showingFilePicker = true
                 }) {
                     Text("Upload \(selectedFiles.count == 0 ? config.maxFiles : selectedFiles.count) file\(selectedFiles.count == 1 ? "" : "s")")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: 16, weight: .medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 36)
+                        .frame(height: 44)
                         .background(Color(hex: "#F77316"))
-                        .cornerRadius(6)
+                        .cornerRadius(8)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .scaleEffect(isHovered ? 1.02 : 1.0)
@@ -267,7 +267,7 @@ public struct UploadDropzone: View {
                     isHovered = hovering
                 }
             }
-            .padding(24)
+            .padding(20)
             .background(Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
