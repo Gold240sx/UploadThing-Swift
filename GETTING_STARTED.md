@@ -260,7 +260,7 @@ do {
 
 The package includes extensive debug logging:
 
-```
+``` swift
 [UploadThingSwift] 📤 REST API upload: test.png
 [UploadThingSwift] 🔑 x-uploadthing-api-key: sk_live_13ebd79...
 [UploadThingSwift] 🆔 x-uploadthing-app-id: your-app-id

@@ -14,9 +14,21 @@ A Swift SDK for [UploadThing](https://uploadthing.com) - the easiest way to add 
 - ✅ **Async/Await** - Modern Swift concurrency support
 - ✅ **Cross-platform** - Works on macOS 13.0+, iOS 16.0+ (includes iPadOS), tvOS 16.0+, visionOS 1.0+
 
-## Installation
+## 1 - Installation
 
-### Swift Package Manager
+## Swift Package Manager
+### 1A - Add it directly in Xcode
+
+1. File → Add Package Dependencies
+2. Enter the repository URL: 
+
+    ```swift
+    "https://github.com/yourusername/UploadThingSwift.git"
+    ```
+
+4. Select version and add to your target
+
+### 1B - Or add it to your Package.swift
 
 Add UploadThingSwift to your `Package.swift`:
 
@@ -26,22 +38,14 @@ dependencies: [
 ]
 ```
 
-Or add it directly in Xcode
-
-1. File → Add Package Dependencies
-2. Enter the repository URL
-3. Select version and add to your target
-
-## Quick Start
-
-### 1. Get Your Credentials
+### 2 - Get Your Credentials
 
 From [UploadThing Dashboard](https://uploadthing.com/dashboard)
 
 - **Secret Key** (`sk_live_...`) - Your API key
 - **App ID** - Your application identifier
 
-### 2. Initialize the Client
+### 3 - Initialize the Client
 
 ```swift
 import UploadThingSwift
@@ -49,11 +53,14 @@ import UploadThingSwift
 let uploadThing = UploadThing(
     apiKey: "sk_live_your_secret_key",
     appId: "your-app-id",
-    region: .usWest2  // optional, defaults to .usWest2
+    region: .euWest1  // optional, defaults to .euWest1 (Frankfurt)
 )
 ```
+Now you have a choice between using the built in SwiftUI components (for easy integration #A) or incorporating the functionality into your own custom implementation (#B).
 
-### 3. Use SwiftUI Components (Recommended)
+## 4A - Quick Start
+
+### 5A - Built-in UI Components (Recommended for getting started)
 
 The easiest way to get started is with the built-in SwiftUI components:
 
@@ -97,7 +104,11 @@ struct ContentView: View {
 }
 ```
 
-### 4. Upload Files
+## 5B - Custom Implementation (Programmatic)
+
+For more control over the upload process, use the programmatic API:
+
+### 6B - Upload Files
 
 ```swift
 // Prepare your file
@@ -116,7 +127,7 @@ print("Uploaded to: \(uploadedFiles[0].url)")
 // Example: https://utfs.io/f/abc123-def456.png
 ```
 
-### 4. Delete Files
+### 7B - Delete Files
 
 ```swift
 // Delete by file key
@@ -154,8 +165,8 @@ Your App → AWS S3 → Upload File
 Choose the region closest to your users. Currently, all regions route through Frankfurt (fra1):
 
 ```swift
-.usWest2        // US West - Default
-.euWest1        // Europe (Frankfurt)
+.euWest1        // Europe (Frankfurt) - Default
+.usWest2        // US West
 .apSoutheast1   // Asia Pacific
 ```
 
