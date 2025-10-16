@@ -6,6 +6,7 @@ A Swift SDK for [UploadThing](https://uploadthing.com) - the easiest way to add 
 
 - ✅ **REST API Integration** - Direct uploads via UploadThing REST API
 - ✅ **Two-Step Upload Flow** - Secure uploads via presigned S3 URLs
+- ✅ **File Deletion** - Delete uploaded files via API
 - ✅ **File Key Generation** - Built-in Sqids-based key generation
 - ✅ **HMAC Signing** - Cryptographic signing with CryptoKit
 - ✅ **Type-safe** - Full Swift type safety with comprehensive error handling
@@ -24,7 +25,8 @@ dependencies: [
 ]
 ```
 
-Or add it directly in Xcode:
+Or add it directly in Xcode
+
 1. File → Add Package Dependencies
 2. Enter the repository URL
 3. Select version and add to your target
@@ -33,7 +35,8 @@ Or add it directly in Xcode:
 
 ### 1. Get Your Credentials
 
-From [UploadThing Dashboard](https://uploadthing.com/dashboard):
+From [UploadThing Dashboard](https://uploadthing.com/dashboard)
+
 - **Secret Key** (`sk_live_...`) - Your API key
 - **App ID** - Your application identifier
 
@@ -66,6 +69,17 @@ let uploadedFiles = try await uploadThing.uploadFiles([file])
 // Access your file
 print("Uploaded to: \(uploadedFiles[0].url)")
 // Example: https://utfs.io/f/abc123-def456.png
+```
+
+### 4. Delete Files
+
+```swift
+// Delete by file key
+try await uploadThing.deleteFile(fileKey: "abc123-def456")
+
+// Delete by URL (extracts file key automatically)
+let fileURL = URL(string: "https://utfs.io/f/abc123-def456")!
+try await uploadThing.deleteFile(url: fileURL)
 ```
 
 ## How It Works
@@ -132,13 +146,30 @@ Main client for interacting with UploadThing.
 
 Uploads files using the REST API with automatic S3 upload.
 
-Parameters:
+Parameters
+
 - `files`: Array of `UTFile` objects to upload
 - `customIds`: Optional custom identifiers for each file
 - `contentDisposition`: How browsers should handle the file (`.inline` or `.attachment`)
 - `acl`: Access control (`.publicRead` or `.private`)
 
 Returns: Array of `UTUploadedFile` with public URLs
+
+**`deleteFile(fileKey:) async throws`**
+
+Deletes a file by its file key.
+
+Parameters
+
+- `fileKey`: The unique file key of the file to delete
+
+**`deleteFile(url:) async throws`**
+
+Deletes a file by its public URL (automatically extracts file key).
+
+Parameters
+
+- `url`: The public URL of the file to delete
 
 **`generatePresignedURLs(for:customIds:contentDisposition:acl:expiresIn:) async throws -> [UTPresignedURL]`**
 
@@ -257,6 +288,21 @@ print("User avatar URL: \(uploadedFiles[0].url)")
 print("Custom ID: \(uploadedFiles[0].customId ?? "none")")
 ```
 
+### Upload and Delete Files
+
+```swift
+// Upload a file
+let file = UTFile(name: "document.pdf", data: pdfData, mimeType: "application/pdf")
+let uploadedFiles = try await uploadThing.uploadFiles([file])
+let fileURL = uploadedFiles[0].url
+
+print("File uploaded: \(fileURL)")
+
+// Later, delete the file
+try await uploadThing.deleteFile(url: URL(string: fileURL)!)
+print("File deleted successfully")
+```
+
 ### Upload Images from macOS/iOS
 
 ```swift
@@ -346,7 +392,8 @@ cd UploadThingSwift
 swift test
 ```
 
-Tests cover:
+Tests cover
+
 - ✅ File key generation (Sqids)
 - ✅ HMAC signature generation
 - ✅ Client initialization
@@ -432,7 +479,15 @@ swift test
 
 ## Changelog
 
+### 1.1.0 (2025-10-16)
+
+- ✅ **File Deletion** - Delete uploaded files via API
+- ✅ **URL-based deletion** - Delete files by public URL
+- ✅ **File key deletion** - Delete files by file key
+- ✅ **Improved error handling** - Better deletion error messages
+
 ### 1.0.0 (2025-10-13)
+
 - ✅ Initial release
 - ✅ REST API integration
 - ✅ Two-step upload flow (API → S3)
@@ -454,12 +509,14 @@ MIT License - see LICENSE file for details
 
 ## Support
 
-For issues specific to this SDK:
+For issues specific to this SDK
+
 - 📧 Open an issue on GitHub
 - 💬 Include debug logs and error messages
 - 🐛 Provide minimal reproduction code
 
-For UploadThing platform issues:
+For UploadThing platform issues
+
 - 📖 [UploadThing Documentation](https://docs.uploadthing.com)
 - 💬 [UploadThing Discord](https://discord.gg/uploadthing)
 - 🎫 [Support Tickets](https://uploadthing.com/support)
@@ -467,5 +524,3 @@ For UploadThing platform issues:
 ---
 
 Made with ❤️ for the Swift community
-
-# UploadThing-Swift
