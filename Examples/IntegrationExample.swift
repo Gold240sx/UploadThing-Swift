@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import UploadThingSwift
 
 /// Example: Working UploadThingSwift Integration
@@ -164,5 +165,228 @@ func completeWorkingExample() async throws {
     let deleteURL = URL(string: uploadedFile.url)!
     try await service.deleteFile(url: deleteURL)
     print("🗑️ File deleted successfully")
+}
+
+// MARK: - SwiftUI Components Example
+
+/// Example SwiftUI view showing how to use UploadButton and UploadDropzone
+@available(macOS 13.0, *)
+struct UploadComponentsExample: View {
+    @State private var uploadedFiles: [UTUploadedFile] = []
+    @State private var errorMessage: String?
+    @State private var isUploading = false
+    
+    private let uploadThing = UploadThing(
+        apiKey: "sk_live_your_secret_key",
+        appId: "your-uploadthing-app-id"
+    )
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            Text("UploadThingSwift Components")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            // UploadButton Example
+            VStack(alignment: .leading, spacing: 12) {
+                Text("UploadButton Component")
+                    .font(.headline)
+                
+                UploadButton(
+                    config: UTUploadConfig(
+                        maxFileSize: 16 * 1024 * 1024, // 16MB
+                        maxFiles: 2,
+                        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+                        allowedExtensions: ["jpg", "jpeg", "png", "gif"]
+                    ),
+                    onFilesSelected: { files in
+                        uploadFiles(files)
+                    },
+                    onError: { error in
+                        errorMessage = error
+                    }
+                )
+            }
+            
+            // UploadDropzone Example
+            VStack(alignment: .leading, spacing: 12) {
+                Text("UploadDropzone Component")
+                    .font(.headline)
+                
+                UploadDropzone(
+                    config: UTUploadConfig(
+                        maxFileSize: 32 * 1024 * 1024, // 32MB
+                        maxFiles: 5,
+                        allowedTypes: ["image/jpeg", "image/png", "image/gif", "image/webp"],
+                        allowedExtensions: ["jpg", "jpeg", "png", "gif", "webp"]
+                    ),
+                    onFilesSelected: { files in
+                        uploadFiles(files)
+                    },
+                    onError: { error in
+                        errorMessage = error
+                    }
+                )
+            }
+            
+            // Upload Status
+            if isUploading {
+                HStack {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("Uploading files...")
+                        .font(.caption)
+                }
+            }
+            
+            // Error Message
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .padding()
+                    .background(Color.red.opacity(0.1))
+                    .cornerRadius(8)
+            }
+            
+            // Uploaded Files List
+            if !uploadedFiles.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Uploaded Files:")
+                        .font(.headline)
+                    
+                    ForEach(uploadedFiles, id: \.key) { file in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(file.name)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                Text(file.url)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Button("Delete") {
+                                deleteFile(file)
+                            }
+                            .font(.caption)
+                            .foregroundColor(.red)
+                        }
+                        .padding(8)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(6)
+                    }
+                }
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private func uploadFiles(_ files: [UTFile]) {
+        Task {
+            await MainActor.run {
+                isUploading = true
+                errorMessage = nil
+            }
+            
+            do {
+                let uploadedFiles = try await uploadThing.uploadFiles(files)
+                
+                await MainActor.run {
+                    self.uploadedFiles.append(contentsOf: uploadedFiles)
+                    isUploading = false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Upload failed: \(error.localizedDescription)"
+                    isUploading = false
+                }
+            }
+        }
+    }
+    
+    private func deleteFile(_ file: UTUploadedFile) {
+        Task {
+            do {
+                try await uploadThing.deleteFile(fileKey: file.key)
+                
+                await MainActor.run {
+                    uploadedFiles.removeAll { $0.key == file.key }
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Delete failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Usage Examples for Components
+
+/// Example showing how to use UploadButton in your SwiftUI app
+@available(macOS 13.0, *)
+func uploadButtonExample() {
+    // Basic usage
+    UploadButton(
+        onFilesSelected: { files in
+            print("Selected \(files.count) files")
+            // Handle selected files
+        },
+        onError: { error in
+            print("Error: \(error)")
+        }
+    )
+    
+    // Custom configuration
+    UploadButton(
+        config: UTUploadConfig(
+            maxFileSize: 10 * 1024 * 1024, // 10MB
+            maxFiles: 1,
+            allowedTypes: ["image/jpeg", "image/png"],
+            allowedExtensions: ["jpg", "jpeg", "png"]
+        ),
+        onFilesSelected: { files in
+            print("Selected files: \(files.map { $0.name })")
+        },
+        onError: { error in
+            print("Upload error: \(error)")
+        }
+    )
+}
+
+/// Example showing how to use UploadDropzone in your SwiftUI app
+@available(macOS 13.0, *)
+func uploadDropzoneExample() {
+    // Basic usage
+    UploadDropzone(
+        onFilesSelected: { files in
+            print("Dropped \(files.count) files")
+            // Handle dropped files
+        },
+        onError: { error in
+            print("Error: \(error)")
+        }
+    )
+    
+    // Custom configuration for documents
+    UploadDropzone(
+        config: UTUploadConfig(
+            maxFileSize: 50 * 1024 * 1024, // 50MB
+            maxFiles: 10,
+            allowedTypes: ["application/pdf", "text/plain", "application/msword"],
+            allowedExtensions: ["pdf", "txt", "doc", "docx"]
+        ),
+        onFilesSelected: { files in
+            print("Selected documents: \(files.map { $0.name })")
+        },
+        onError: { error in
+            print("Upload error: \(error)")
+        }
+    )
 }
 
