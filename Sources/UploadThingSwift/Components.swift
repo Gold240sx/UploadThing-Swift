@@ -78,10 +78,10 @@ public struct UploadButton: View {
                     .multilineTextAlignment(.center)
             }
             .padding(20)
-            .background(Color.white)
+            .background(Color(.windowBackgroundColor))
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    .stroke(Color(.separatorColor), lineWidth: 1)
             )
             .cornerRadius(12)
             
@@ -234,13 +234,13 @@ public struct UploadDropzone: View {
                 // Upload icon
                 Image(systemName: isDragOver ? "arrow.down.doc.fill" : "square.and.arrow.up.fill")
                     .font(.system(size: 48))
-                    .foregroundColor(isDragOver ? .blue : .gray)
+                    .foregroundColor(isDragOver ? .blue : Color(.secondaryLabelColor))
                     .modifier(SymbolEffectModifier(isActive: isDragOver))
                 
                 // Main instruction
                 Text(isDragOver ? "Drop files here" : "Drag & Drop Files")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(isDragOver ? .blue : Color(hex: "#1F2937"))
+                    .foregroundColor(isDragOver ? .blue : Color(.labelColor))
                 
                 // Allowed content info
                 Text(allowedContentText)
@@ -268,11 +268,11 @@ public struct UploadDropzone: View {
                 }
             }
             .padding(20)
-            .background(Color.white)
+            .background(Color(.windowBackgroundColor))
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(
-                        isDragOver ? Color.blue : Color.gray.opacity(0.4),
+                        isDragOver ? Color.blue : Color(.separatorColor),
                         style: StrokeStyle(lineWidth: 2, dash: [8, 4])
                     )
             )
