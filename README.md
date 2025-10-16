@@ -4,6 +4,7 @@ A Swift SDK for [UploadThing](https://uploadthing.com) - the easiest way to add 
 
 ## Features
 
+- ✅ **SwiftUI Components** - Built-in UploadButton and UploadDropzone components
 - ✅ **REST API Integration** - Direct uploads via UploadThing REST API
 - ✅ **Two-Step Upload Flow** - Secure uploads via presigned S3 URLs
 - ✅ **File Deletion** - Delete uploaded files via API
@@ -52,7 +53,51 @@ let uploadThing = UploadThing(
 )
 ```
 
-### 3. Upload Files
+### 3. Use SwiftUI Components (Recommended)
+
+The easiest way to get started is with the built-in SwiftUI components:
+
+```swift
+import SwiftUI
+import UploadThingSwift
+
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            // Upload Button
+            UploadButton(
+                config: UTUploadConfig(
+                    maxFileSize: 16 * 1024 * 1024, // 16MB
+                    maxFiles: 2,
+                    allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+                    allowedExtensions: ["jpg", "jpeg", "png", "gif"]
+                ),
+                onFilesSelected: { files in
+                    print("Selected \(files.count) files")
+                    // Handle selected files
+                },
+                onError: { error in
+                    print("Error: \(error)")
+                }
+            )
+            
+            // Upload Dropzone
+            UploadDropzone(
+                config: UTUploadConfig(),
+                onFilesSelected: { files in
+                    print("Dropped \(files.count) files")
+                    // Handle dropped files
+                },
+                onError: { error in
+                    print("Error: \(error)")
+                }
+            )
+        }
+    }
+}
+```
+
+### 4. Upload Files
 
 ```swift
 // Prepare your file
@@ -478,6 +523,14 @@ swift test
 ```
 
 ## Changelog
+
+### 1.2.1 (2025-01-16)
+
+- ✅ **SwiftUI Components** - Added UploadButton and UploadDropzone components
+- ✅ **UTUploadConfig** - Configuration struct for SwiftUI components
+- ✅ **Drag & Drop Support** - UploadDropzone supports drag and drop files
+- ✅ **File Validation** - Built-in file type and size validation
+- ✅ **Cross-platform UI** - Components work on macOS, iOS, tvOS, watchOS
 
 ### 1.1.0 (2025-10-16)
 
