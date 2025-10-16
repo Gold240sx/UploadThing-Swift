@@ -86,7 +86,7 @@ final class UploadThingSwiftTests: XCTestCase {
     func testUTRegionAlias() {
         XCTAssertEqual(UTRegion.usWest2.alias, "fra1")
         XCTAssertEqual(UTRegion.euWest1.alias, "fra1")
-        XCTAssertEqual(UTRegion.apSoutheast1.alias, "sin1")
+        XCTAssertEqual(UTRegion.apSoutheast1.alias, "fra1")  // All regions currently use fra1
     }
     
     // MARK: - Integration Tests

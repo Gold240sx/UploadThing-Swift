@@ -102,9 +102,9 @@ public actor UploadThing {
         request.setValue(appId, forHTTPHeaderField: "x-uploadthing-app-id")
         request.httpBody = body
         
-        print("[UploadThingSwift] 📤 REST API upload: \(file.name)")
-        print("[UploadThingSwift] 🔑 x-uploadthing-api-key: \(apiKey.prefix(15))...")
-        print("[UploadThingSwift] 🆔 x-uploadthing-app-id: \(appId)")
+        // print("[UploadThingSwift] 📤 REST API upload: \(file.name)")
+        // print("[UploadThingSwift] 🔑 x-uploadthing-api-key: \(apiKey.prefix(15))...")
+        // print("[UploadThingSwift] 🆔 x-uploadthing-app-id: \(appId)")
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -113,15 +113,15 @@ public actor UploadThing {
                 throw UTError.uploadFailed("Invalid HTTP response")
             }
             
-            print("[UploadThingSwift] 📊 Status: \(httpResponse.statusCode)")
+            // print("[UploadThingSwift] 📊 Status: \(httpResponse.statusCode)")
             
             if !(200...299).contains(httpResponse.statusCode) {
                 let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
-                print("[UploadThingSwift] ❌ Error: \(errorMessage)")
+                // print("[UploadThingSwift] ❌ Error: \(errorMessage)")
                 throw UTError.uploadFailed("Upload failed (\(httpResponse.statusCode)): \(errorMessage)")
             }
             
-            print("[UploadThingSwift] ✅ API Response received")
+            // print("[UploadThingSwift] ✅ API Response received")
             
             // Parse response - UploadThing returns presigned S3 URLs
             struct UploadResponse: Codable {
@@ -142,7 +142,7 @@ public actor UploadThing {
                 throw UTError.uploadFailed("No upload data in response")
             }
             
-            print("[UploadThingSwift] 📤 Uploading to S3: \(uploadData.url)")
+            // print("[UploadThingSwift] 📤 Uploading to S3: \(uploadData.url)")
             
             // Step 2: Upload file to S3 using presigned POST
             try await uploadToS3(
@@ -153,7 +153,7 @@ public actor UploadThing {
                 contentType: file.mimeType
             )
             
-            print("[UploadThingSwift] ✅ Upload complete: \(uploadData.fileUrl)")
+            // print("[UploadThingSwift] ✅ Upload complete: \(uploadData.fileUrl)")
             
             return UTUploadedFile(
                 key: uploadData.key,
@@ -227,9 +227,9 @@ public actor UploadThing {
         let body = ["fileKeys": [fileKey]]
         request.httpBody = try JSONEncoder().encode(body)
         
-        print("[UploadThingSwift] 🗑️ Deleting file: \(fileKey)")
-        print("[UploadThingSwift] 🔑 x-uploadthing-api-key: \(apiKey.prefix(15))...")
-        print("[UploadThingSwift] 🆔 x-uploadthing-app-id: \(appId)")
+        // print("[UploadThingSwift] 🗑️ Deleting file: \(fileKey)")
+        // print("[UploadThingSwift] 🔑 x-uploadthing-api-key: \(apiKey.prefix(15))...")
+        // print("[UploadThingSwift] 🆔 x-uploadthing-app-id: \(appId)")
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -238,15 +238,15 @@ public actor UploadThing {
                 throw UTError.uploadFailed("Invalid HTTP response")
             }
             
-            print("[UploadThingSwift] 📊 Delete Status: \(httpResponse.statusCode)")
+            // print("[UploadThingSwift] 📊 Delete Status: \(httpResponse.statusCode)")
             
             if !(200...299).contains(httpResponse.statusCode) {
                 let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
-                print("[UploadThingSwift] ❌ Delete Error: \(errorMessage)")
+                // print("[UploadThingSwift] ❌ Delete Error: \(errorMessage)")
                 throw UTError.uploadFailed("Delete failed (\(httpResponse.statusCode)): \(errorMessage)")
             }
             
-            print("[UploadThingSwift] ✅ File deleted successfully")
+            // print("[UploadThingSwift] ✅ File deleted successfully")
             
         } catch let error as UTError {
             throw error

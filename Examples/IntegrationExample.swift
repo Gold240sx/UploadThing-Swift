@@ -1,80 +1,119 @@
 import Foundation
 import UploadThingSwift
 
-/// Example: Integrating UploadThingSwift with DevSpace Pro
+/// Example: Working UploadThingSwift Integration
+/// This example shows the exact working implementation used in DevSpace Pro
 
 @available(macOS 13.0, *)
 class UploadThingMediaService {
     
     private let uploadThing: UploadThing
     
-    init(apiKey: String, appId: String) {
+    init(apiKey: String, appId: String, region: UTRegion = .usWest2) {
         self.uploadThing = UploadThing(
             apiKey: apiKey,
             appId: appId,
-            region: .usWest2
+            region: region
         )
     }
     
-    // MARK: - Server-Side Upload
+    // MARK: - Working Upload Method
     
-    /// Upload a file directly from the server
-    func uploadFile(at url: URL, customId: String? = nil) async throws -> UTUploadedFile {
-        let fileData = try Data(contentsOf: url)
-        let fileName = url.lastPathComponent
+    /// Upload a file using the working implementation
+    /// This matches the exact method used in DevSpace Pro's MediaUploadService
+    func uploadFile(at imageURL: URL, fileName: String) async throws -> UTUploadedFile {
+        // Read file data
+        let fileData = try Data(contentsOf: imageURL)
+        let mimeType = getMimeType(for: imageURL)
         
+        print("📤 Uploading '\(fileName)' to UploadThing...")
+        print("📊 Size: \(fileData.count) bytes, Type: \(mimeType)")
+        print("🔧 USING WORKING UPLOAD METHOD: uploadToUploadThing")
+        
+        // Create UTFile
         let file = UTFile(
             name: fileName,
-            data: fileData
+            data: fileData,
+            mimeType: mimeType
         )
         
-        let uploadedFiles = try await uploadThing.uploadFiles(
-            [file],
-            customIds: customId.map { [$0] },
-            contentDisposition: .inline,
-            acl: .publicRead
-        )
-        
-        return uploadedFiles[0]
-    }
-    
-    // MARK: - Batch Upload
-    
-    /// Upload multiple files at once
-    func uploadFiles(_ urls: [URL]) async throws -> [UTUploadedFile] {
-        var files: [UTFile] = []
-        
-        for url in urls {
-            let fileData = try Data(contentsOf: url)
-            let fileName = url.lastPathComponent
+        // Upload using UploadThingSwift SDK
+        do {
+            let uploadedFiles = try await uploadThing.uploadFiles([file])
             
-            let file = UTFile(
-                name: fileName,
-                data: fileData
-            )
-            files.append(file)
+            guard let uploadedFile = uploadedFiles.first else {
+                throw UploadError.invalidResponse
+            }
+            
+            print("✅ Upload successful: \(uploadedFile.url)")
+            return uploadedFile
+        } catch let error as UTError {
+            print("❌ UploadThing error: \(error.localizedDescription)")
+            throw error
+        } catch {
+            print("❌ Unexpected error: \(error.localizedDescription)")
+            throw error
         }
-        
-        return try await uploadThing.uploadFiles(files)
     }
     
-    // MARK: - Client-Side Upload (Presigned URLs)
+    // MARK: - Working Delete Method
     
-    /// Generate presigned URLs for client uploads
-    func generatePresignedURLs(
-        for fileMetadata: [(name: String, size: Int, type: String)]
-    ) async throws -> [UTPresignedURL] {
-        // Create placeholder files with empty data
-        // (actual data will be uploaded by the client)
-        let files = fileMetadata.map { metadata in
-            UTFile(
-                name: metadata.name,
-                data: Data(count: metadata.size),
-                mimeType: metadata.type
-            )
-        }
+    /// Delete a file using the working implementation
+    func deleteFile(url: URL) async throws {
+        print("🗑️ Deleting file: \(url.absoluteString)")
         
-        return try await uploadThing.generatePresignedURLs(for: files)
+        try await uploadThing.deleteFile(url: url)
+        
+        print("✅ File deleted successfully")
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func getMimeType(for url: URL) -> String {
+        let pathExtension = url.pathExtension.lowercased()
+        
+        switch pathExtension {
+        case "jpg", "jpeg":
+            return "image/jpeg"
+        case "png":
+            return "image/png"
+        case "gif":
+            return "image/gif"
+        case "svg":
+            return "image/svg+xml"
+        case "webp":
+            return "image/webp"
+        case "pdf":
+            return "application/pdf"
+        case "mp4":
+            return "video/mp4"
+        case "mp3":
+            return "audio/mp3"
+        case "wav":
+            return "audio/wav"
+        case "json":
+            return "application/json"
+        case "txt":
+            return "text/plain"
+        default:
+            return "application/octet-stream"
+        }
+    }
+}
+
+// MARK: - Error Types
+
+enum UploadError: Error, LocalizedError {
+    case invalidResponse
+    case uploadFailed(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidResponse:
+            return "Invalid response from server"
+        case .uploadFailed(let message):
+            return "Upload failed: \(message)"
+        }
     }
 }
 
@@ -83,57 +122,47 @@ class UploadThingMediaService {
 @available(macOS 13.0, *)
 func exampleUsage() async throws {
     let service = UploadThingMediaService(
-        apiKey: "your-uploadthing-api-key",
+        apiKey: "sk_live_your_secret_key",
         appId: "your-uploadthing-app-id"
     )
     
-    // Example 1: Upload a single file
+    // Example 1: Upload a single file (working method)
     let fileURL = URL(fileURLWithPath: "/path/to/image.jpg")
-    let uploadedFile = try await service.uploadFile(at: fileURL, customId: "user-avatar-123")
-    print("Uploaded to: \(uploadedFile.url)")
+    let uploadedFile = try await service.uploadFile(at: fileURL, fileName: "my-image.jpg")
+    print("✅ Uploaded to: \(uploadedFile.url)")
+    print("📁 File key: \(uploadedFile.key)")
     
-    // Example 2: Upload multiple files
-    let urls = [
-        URL(fileURLWithPath: "/path/to/image1.jpg"),
-        URL(fileURLWithPath: "/path/to/image2.jpg"),
-        URL(fileURLWithPath: "/path/to/image3.jpg")
-    ]
-    let uploadedFiles = try await service.uploadFiles(urls)
-    print("Uploaded \(uploadedFiles.count) files")
-    
-    // Example 3: Generate presigned URLs for client upload
-    let fileMetadata = [
-        (name: "photo.jpg", size: 1024000, type: "image/jpeg"),
-        (name: "document.pdf", size: 512000, type: "application/pdf")
-    ]
-    let presignedURLs = try await service.generatePresignedURLs(for: fileMetadata)
-    
-    for presignedURL in presignedURLs {
-        print("Client upload to: \(presignedURL.url)")
-        print("Public URL: \(presignedURL.publicURL)")
-    }
+    // Example 2: Delete the uploaded file
+    let fileURLToDelete = URL(string: uploadedFile.url)!
+    try await service.deleteFile(url: fileURLToDelete)
+    print("🗑️ File deleted successfully")
 }
 
-// MARK: - Integration with MediaUploadService
+// MARK: - Complete Working Example
 
-/// Example: How to integrate with your existing MediaUploadService.swift
-
-extension UploadThingMediaService {
+/// This shows the exact working implementation from DevSpace Pro
+@available(macOS 13.0, *)
+func completeWorkingExample() async throws {
+    // Initialize with your credentials
+    let service = UploadThingMediaService(
+        apiKey: "sk_live_your_secret_key",  // Your UploadThing secret key
+        appId: "your-app-id",              // Your UploadThing app ID
+        region: .usWest2                    // Optional: .usWest2, .euWest1, .apSoutheast1
+    )
     
-    /// Upload with SwiftData tracking (similar to your current MediaUploadService)
-    func uploadWithTracking(
-        imageURL: URL,
-        itemName: String,
-        modelContext: Any // Replace with actual ModelContext type
-    ) async throws -> (url: String, fileKey: String) {
-        let uploadedFile = try await uploadFile(at: imageURL, customId: itemName)
-        
-        // Create MediaItem in SwiftData (similar to your current implementation)
-        // let mediaItem = MediaItem(...)
-        // modelContext.insert(mediaItem)
-        // try modelContext.save()
-        
-        return (url: uploadedFile.url, fileKey: uploadedFile.key)
-    }
+    // Upload a file
+    let imageURL = URL(fileURLWithPath: "/path/to/your/image.png")
+    let uploadedFile = try await service.uploadFile(at: imageURL, fileName: "uploaded-image.png")
+    
+    print("🎉 Upload successful!")
+    print("📤 Public URL: \(uploadedFile.url)")
+    print("🔑 File Key: \(uploadedFile.key)")
+    print("📊 File Size: \(uploadedFile.size) bytes")
+    print("📝 File Name: \(uploadedFile.name)")
+    
+    // Later, delete the file
+    let deleteURL = URL(string: uploadedFile.url)!
+    try await service.deleteFile(url: deleteURL)
+    print("🗑️ File deleted successfully")
 }
 
