@@ -106,28 +106,46 @@ struct ContentView: View {
 
 ## 5B - Custom Implementation (Programmatic)
 
-For more control over the upload process, use the programmatic API:
+For more control over the upload process, use the programmatic API. This includes all the same functionality as the built-in components - file type validation, max file size, number of files, etc. - but gives you complete control over the implementation:
 
-### 6B - Upload Files
+### B - Upload Files with Validation
 
 ```swift
-// Prepare your file
+// Prepare your file with validation
 let fileData = try Data(contentsOf: fileURL)
+
+// Validate file size (16MB limit)
+guard fileData.count <= 16 * 1024 * 1024 else {
+    throw NSError(domain: "FileError", code: -1, userInfo: [NSLocalizedDescriptionKey: "File too large"])
+}
+
+// Validate file type
+let allowedTypes = ["image/jpeg", "image/png", "image/gif"]
+let mimeType = "image/png"
+guard allowedTypes.contains(mimeType) else {
+    throw NSError(domain: "FileError", code: -1, userInfo: [NSLocalizedDescriptionKey: "File type not allowed"])
+}
+
 let file = UTFile(
     name: "my-image.png",
     data: fileData,
-    mimeType: "image/png"
+    mimeType: mimeType
 )
 
-// Upload (automatic two-step process: API → S3)
-let uploadedFiles = try await uploadThing.uploadFiles([file])
+// Upload with custom configuration
+let uploadedFiles = try await uploadThing.uploadFiles(
+    [file],
+    customIds: ["user-avatar-123"],
+    contentDisposition: .inline,
+    acl: .publicRead
+)
 
 // Access your file
 print("Uploaded to: \(uploadedFiles[0].url)")
 // Example: https://utfs.io/f/abc123-def456.png
 ```
 
-### 7B - Delete Files
+### B - Delete Files
 
 ```swift
 // Delete by file key
