@@ -27,7 +27,7 @@ public struct UTUploadConfig {
 // MARK: - Upload Button Component
 
 /// A salmon-colored button component for file uploads
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 public struct UploadButton: View {
     @State private var isHovered = false
     @State private var selectedFiles: [UTFile] = []
@@ -205,7 +205,7 @@ public struct UploadButton: View {
 // MARK: - Upload Dropzone Component
 
 /// A dropzone component with dashed border and upload icon
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 public struct UploadDropzone: View {
     @State private var isHovered = false
     @State private var isDragOver = false
@@ -232,14 +232,15 @@ public struct UploadDropzone: View {
             // Dropzone container with dashed border
             VStack(spacing: 20) {
                 // Upload icon
-                Image(systemName: "cloud.arrow.up")
+                Image(systemName: isDragOver ? "arrow.down.doc.fill" : "square.and.arrow.up.fill")
                     .font(.system(size: 48))
-                    .foregroundColor(.gray)
+                    .foregroundColor(isDragOver ? .blue : .gray)
+                    .modifier(SymbolEffectModifier(isActive: isDragOver))
                 
                 // Main instruction
-                Text("Choose files or drag and drop")
+                Text(isDragOver ? "Drop files here" : "Drag & Drop Files")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color(hex: "#1F2937"))
+                    .foregroundColor(isDragOver ? .blue : Color(hex: "#1F2937"))
                 
                 // Allowed content info
                 Text(allowedContentText)
@@ -328,11 +329,16 @@ public struct UploadDropzone: View {
         let group = DispatchGroup()
         
         for provider in providers {
-            group.enter()
-            provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { (item, error) in
-                defer { group.leave() }
-                if let url = item as? URL {
-                    urls.append(url)
+            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                group.enter()
+                provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { (item, error) in
+                    defer { group.leave() }
+                    if let data = item as? Data,
+                       let url = URL(dataRepresentation: data, relativeTo: nil) {
+                        urls.append(url)
+                    } else if let url = item as? URL {
+                        urls.append(url)
+                    }
                 }
             }
         }
@@ -448,5 +454,20 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+
+// MARK: - Symbol Effect Modifier
+
+struct SymbolEffectModifier: ViewModifier {
+    let isActive: Bool
+    
+    func body(content: Content) -> some View {
+        if #available(macOS 14.0, iOS 17.0, tvOS 17.0, visionOS 1.0, *) {
+            content
+                .symbolEffect(.bounce, value: isActive)
+        } else {
+            content
+        }
     }
 }
