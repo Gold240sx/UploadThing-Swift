@@ -27,7 +27,7 @@ public struct UTUploadConfig {
 // MARK: - Upload Button Component
 
 /// A salmon-colored button component for file uploads
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 public struct UploadButton: View {
     @State private var isHovered = false
     @State private var selectedFiles: [UTFile] = []
@@ -205,7 +205,7 @@ public struct UploadButton: View {
 // MARK: - Upload Dropzone Component
 
 /// A dropzone component with dashed border and upload icon
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 public struct UploadDropzone: View {
     @State private var isHovered = false
     @State private var isDragOver = false

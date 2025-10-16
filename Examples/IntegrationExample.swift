@@ -5,7 +5,7 @@ import UploadThingSwift
 /// Example: Working UploadThingSwift Integration
 /// This example shows the exact working implementation used in DevSpace Pro
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 class UploadThingMediaService {
     
     private let uploadThing: UploadThing
@@ -120,7 +120,7 @@ enum UploadError: Error, LocalizedError {
 
 // MARK: - Usage Examples
 
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 func exampleUsage() async throws {
     let service = UploadThingMediaService(
         apiKey: "sk_live_your_secret_key",
@@ -142,7 +142,7 @@ func exampleUsage() async throws {
 // MARK: - Complete Working Example
 
 /// This shows the exact working implementation from DevSpace Pro
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 func completeWorkingExample() async throws {
     // Initialize with your credentials
     let service = UploadThingMediaService(
@@ -170,7 +170,7 @@ func completeWorkingExample() async throws {
 // MARK: - SwiftUI Components Example
 
 /// Example SwiftUI view showing how to use UploadButton and UploadDropzone
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 struct UploadComponentsExample: View {
     @State private var uploadedFiles: [UTUploadedFile] = []
     @State private var errorMessage: String?
@@ -329,7 +329,7 @@ struct UploadComponentsExample: View {
 // MARK: - Usage Examples for Components
 
 /// Example showing how to use UploadButton in your SwiftUI app
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 func uploadButtonExample() {
     // Basic usage
     UploadButton(
@@ -360,7 +360,7 @@ func uploadButtonExample() {
 }
 
 /// Example showing how to use UploadDropzone in your SwiftUI app
-@available(macOS 13.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 16.0, visionOS 1.0, *)
 func uploadDropzoneExample() {
     // Basic usage
     UploadDropzone(
