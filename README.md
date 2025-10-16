@@ -553,7 +553,7 @@ swift test
 
 ## Changelog
 
-### 1.2.7 (2025-01-16)
+### 1.2.7 (2025-10-16)
 
 - ✅ **Documentation Cleanup** - Remove DevSpace Pro references from package documentation
 - ✅ **Generic Examples** - Update IntegrationExample.swift to use generic implementation descriptions
@@ -561,7 +561,7 @@ swift test
 - ✅ **Reusable Package** - Make package documentation more generic and reusable
 - ✅ **README Reorganization** - Reorganize README structure for better user experience
 
-### 1.2.6 (2025-01-16)
+### 1.2.6 (2025-10-16)
 
 - ✅ **Light and Dark Appearance Support** - Added system color support for light and dark modes
 - ✅ **Adaptive Backgrounds** - Background: Color(.windowBackgroundColor) - adapts to system theme
@@ -571,7 +571,7 @@ swift test
 - ✅ **Automatic Theme Switching** - Components now automatically adapt to light/dark mode changes
 - ✅ **Visual Consistency** - Maintains visual consistency across all system appearances
 
-### 1.2.5 (2025-01-16)
+### 1.2.5 (2025-10-16)
 
 - ✅ **Consistent Button Styling** - Updated UploadDropzone button to match UploadButton styling
 - ✅ **Font Size Update** - Font size: 14 → 16 (matches UploadButton)
@@ -580,7 +580,7 @@ swift test
 - ✅ **Padding Update** - Padding: 24 → 20 (matches UploadButton)
 - ✅ **Visual Consistency** - Ensures consistent visual appearance across components
 
-### 1.2.4 (2025-01-16)
+### 1.2.4 (2025-10-16)
 
 - ✅ **Improved UploadDropzone** - Enhanced drag and drop experience
 - ✅ **Dynamic Cloud Icon** - Added proper cloud icon with dynamic state (square.and.arrow.up.fill / arrow.down.doc.fill)
