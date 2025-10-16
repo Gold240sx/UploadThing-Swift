@@ -12,7 +12,7 @@ A Swift SDK for [UploadThing](https://uploadthing.com) - the easiest way to add 
 - ✅ **HMAC Signing** - Cryptographic signing with CryptoKit
 - ✅ **Type-safe** - Full Swift type safety with comprehensive error handling
 - ✅ **Async/Await** - Modern Swift concurrency support
-- ✅ **Cross-platform** - Works on macOS 13.0+, iOS 16.0+, tvOS 16.0+, watchOS 9.0+
+- ✅ **Cross-platform** - Works on macOS 13.0+, iOS 16.0+ (includes iPadOS), tvOS 16.0+, watchOS 9.0+
 
 ## Installation
 
@@ -523,6 +523,12 @@ swift test
 ```
 
 ## Changelog
+
+### 1.2.2 (2025-01-16)
+
+- ✅ **Platform Coverage** - Full support for macOS, iOS (includes iPadOS), tvOS, watchOS
+- ✅ **Availability Updates** - Updated @available annotations for complete platform support
+- ✅ **Documentation** - Clarified that iOS includes iPadOS support
 
 ### 1.2.1 (2025-01-16)
 
