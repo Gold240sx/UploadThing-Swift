@@ -553,6 +553,43 @@ swift test
 
 ## Changelog
 
+### 1.2.7 (2025-01-16)
+
+- ✅ **Documentation Cleanup** - Remove DevSpace Pro references from package documentation
+- ✅ **Generic Examples** - Update IntegrationExample.swift to use generic implementation descriptions
+- ✅ **Getting Started Guide** - Update GETTING_STARTED.md to remove DevSpace Pro specific content
+- ✅ **Reusable Package** - Make package documentation more generic and reusable
+- ✅ **README Reorganization** - Reorganize README structure for better user experience
+
+### 1.2.6 (2025-01-16)
+
+- ✅ **Light and Dark Appearance Support** - Added system color support for light and dark modes
+- ✅ **Adaptive Backgrounds** - Background: Color(.windowBackgroundColor) - adapts to system theme
+- ✅ **Adaptive Text Colors** - Text: Color(.labelColor) - primary text color for current theme
+- ✅ **Secondary Text Support** - Secondary text: Color(.secondaryLabelColor) - secondary text for current theme
+- ✅ **Adaptive Borders** - Borders: Color(.separatorColor) - separator color for current theme
+- ✅ **Automatic Theme Switching** - Components now automatically adapt to light/dark mode changes
+- ✅ **Visual Consistency** - Maintains visual consistency across all system appearances
+
+### 1.2.5 (2025-01-16)
+
+- ✅ **Consistent Button Styling** - Updated UploadDropzone button to match UploadButton styling
+- ✅ **Font Size Update** - Font size: 14 → 16 (matches UploadButton)
+- ✅ **Button Height Update** - Button height: 36 → 44 (matches UploadButton)
+- ✅ **Corner Radius Update** - Corner radius: 6 → 8 (matches UploadButton)
+- ✅ **Padding Update** - Padding: 24 → 20 (matches UploadButton)
+- ✅ **Visual Consistency** - Ensures consistent visual appearance across components
+
+### 1.2.4 (2025-01-16)
+
+- ✅ **Improved UploadDropzone** - Enhanced drag and drop experience
+- ✅ **Dynamic Cloud Icon** - Added proper cloud icon with dynamic state (square.and.arrow.up.fill / arrow.down.doc.fill)
+- ✅ **Bounce Animation** - Added bounce animation effect for drag states
+- ✅ **Updated Text** - Updated text to match project behavior ('Drag & Drop Files' / 'Drop files here')
+- ✅ **Enhanced Drag Handling** - Improved drag and drop handling with proper UTType.fileURL.identifier
+- ✅ **SymbolEffectModifier** - Added SymbolEffectModifier for backward compatibility
+- ✅ **Visual Feedback** - Enhanced visual feedback during drag operations
+
 ### 1.2.3 (2025-01-16)
 
 - ✅ **visionOS Support** - Added visionOS 1.0+ support for SwiftUI components
