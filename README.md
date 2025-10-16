@@ -608,7 +608,7 @@ swift test
 - ✅ **UTUploadConfig** - Configuration struct for SwiftUI components
 - ✅ **Drag & Drop Support** - UploadDropzone supports drag and drop files
 - ✅ **File Validation** - Built-in file type and size validation
-- ✅ **Cross-platform UI** - Components work on macOS, iOS, tvOS, watchOS
+- ✅ **Cross-platform UI** - Components work on macOS, iOS, iPadOS, tvOS, and visionOS
 
 ### 1.1.0 (2025-10-16)
 
